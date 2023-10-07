@@ -25,41 +25,19 @@ Keypad kpad(D12, D14, D15, PTB8, D8, D9, D10, D11);
 const int numRows = 4;
 const int numCols = 4;
 
-char keyMap[numRows][numCols] = {{'1', '2', '3', 'A'},
-                                 {'4', '5', '6', 'B'},
-                                 {'7', '8', '9', 'C'},
-                                 {'*', '0', '#', 'D'}};
 
 DigitalIn rowPins[numRows] = {DigitalIn(D8), DigitalIn(D9), DigitalIn(D10),
                               DigitalIn(D11)};
 DigitalOut colPins[numCols] = {DigitalOut(D12), DigitalOut(D14),
                                DigitalOut(D15), DigitalOut(PTB8)};
 
-string membrana() {
-  for (int i = 0; i < numCols; i++) {
-    colPins[i] = 0;
-
-    for (int j = 0; j < numRows; j++) {
-      if (rowPins[j] == 0) {
-        while (rowPins[j] == 0)
-          ;
-        colPins[i] = 1;
-        return keyMap[j][i];
-      }
-    }
-
-    colPins[i] = 1;
-  }
-
-  return "";
-}
 
 string leerNum() {
   string caracterPresionado = "";
   string cadena = "";
 
   while (caracterPresionado != "*") {
-    caracterPresionado = membrana();
+    caracterPresionado = kpad.ReadKey();
 
     if (caracterPresionado != "") {
 
@@ -97,9 +75,9 @@ void pend_inter() {
   y2 = stoi(leerNum());
 
   if (x1 == x2) {
-   lcd.printf("recta vertical no tiene pendiente");
+   lcd.printf("recta vertical no tiene pendiente,");
    wait_us(2000000);
-   lcd.printf("y la division por 0 es indefinida");
+   lcd.printf("la division por 0 es indefinida");
    wait_us(2000000);
   } else {
     float m = y2 - y1 / (x2 - x1);
@@ -129,6 +107,7 @@ float calcular_desviacion_estandar(float arr[], int n, float promedio) {
 
 void temperatura() {
   int n;
+  lcd.cls();
   lcd.printf("Ingrese la cantidad de");
   wait_us(1000000);
   lcd.printf("temperaturas a digitar:");
@@ -139,46 +118,52 @@ void temperatura() {
   for (i = 0; i < n; i++) {
     int i1=i+1;
     wait_us(1000000);
+    lcd.cls();
     lcd.printf("ingrese la temperatura: %.0d", i1);
     temps[i] = stoi(leerNum());
   }
   float promedio = calcular_promedio(temps, n);
+  lcd.cls();
   lcd.printf("Promedio de temperaturas: %.2f", promedio);
   wait_us(2000000);
   float desviacionEst = calcular_desviacion_estandar(temps, n, promedio);
+  lcd.cls();
   lcd.printf("Desviacion Estandar: %.2f", desviacionEst);
   wait_us(2000000);
 }
 
 void leds() {
-
+  lcd.cls();
   lcd.printf("Digite el valor R:");
   wait_us(2000000);
   float red = stoi(leerNum());
 
   while (red > 255) {
+    lcd.cls();
     lcd.printf("Digite un valor [0-255]:");
     wait_us(2000000);
     red = stoi(leerNum());
   }
-
+  lcd.cls();
   lcd.printf("Digite el valor G:");
   wait_us(2000000);
   float green = stoi(leerNum());
 
   while (green > 255) {
+    lcd.cls();
     lcd.printf("Digite un valor [0-255]:");
     wait_us(2000000);
 
     green = stoi(leerNum());
   }
-
+  lcd.cls();
   lcd.printf("Digite valor de B");
   wait_us(2000000);
 
   float blue = stoi(leerNum());
 
   while (blue > 255) {
+    lcd.cls();
     lcd.printf("Digite un valor [0-255]:");
     wait_us(2000000);
 
@@ -195,16 +180,18 @@ void leds() {
 
 int opcion;
 int main() {
-
   lcd.printf("Elija una opción y presione *");
   wait_us(2000000);
+  lcd.cls();
   lcd.printf("1.Calcular pendiente e intercepto");
   wait_us(2000000);
+  lcd.cls();
   lcd.printf("2. Calcular prommedio y");
   wait_us(2000000);
+  lcd.cls();
   lcd.printf("   desviacion de temperaturas.");
   wait_us(2000000);
-
+  lcd.cls();
   lcd.printf("3.LED RGB");
   wait_us(2000000);
   
@@ -212,6 +199,7 @@ int main() {
 
   // Leer la elección del usuario desde el teclado de membrana
   while (opcion < 1 || opcion > 3) {
+    lcd.cls();
     lcd.printf("Ingrese una opcion valida");
     wait_us(2000000);
     opcion = stoi(leerNum());
