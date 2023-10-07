@@ -22,14 +22,6 @@ void setRGBColor(float red, float green, float blue) {
 
 Keypad kpad(D12, D14, D15, PTB8, D8, D9, D10, D11);
 
-const int numRows = 4;
-const int numCols = 4;
-
-
-DigitalIn rowPins[numRows] = {DigitalIn(D8), DigitalIn(D9), DigitalIn(D10),
-                              DigitalIn(D11)};
-DigitalOut colPins[numCols] = {DigitalOut(D12), DigitalOut(D14),
-                               DigitalOut(D15), DigitalOut(PTB8)};
 
 
 string leerNum() {
@@ -122,6 +114,7 @@ void temperatura() {
     lcd.printf("ingrese la temperatura: %.0d", i1);
     temps[i] = stoi(leerNum());
   }
+
   float promedio = calcular_promedio(temps, n);
   lcd.cls();
   lcd.printf("Promedio de temperaturas: %.2f", promedio);
